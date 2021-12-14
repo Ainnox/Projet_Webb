@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% block title %} Login {% endblock %}</h1>
+<ul>
+    <li>
+        <a href="{{url_for('main.index')}}">Home</a>
+    </li>
+    <li>
+        <a href="{{url_for('main.profile')}}">Profile</a>
+    </li>
+    <li>
+        <a href="{{url_for('auth.login')}}">Login</a>
+    </li>
+    <li>
+        <a href="{{url_for('auth.signup')}}">sign up</a>
+    </li>
+    <li>
+        <a href="{{url_for('auth.logout')}}">Log out</a>
+    </li>
+</ul>
+{% endblock %}
