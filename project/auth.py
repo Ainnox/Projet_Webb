@@ -1,6 +1,5 @@
 import sqlite3
-
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from . import db
@@ -21,26 +20,32 @@ def signup():
 @auth.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
-    name = request.form.get(('name'))
+    name = request.form.get('name')
     password = request.form.get('password')
 
-    # con = sqlite3.connect('../database.db')
-    # cur = con.cursor()
-    # user = cur.execute('SELECT email FROM users')
+    con = sqlite3.connect('database.db')
+    cur = con.cursor()
+    cur.execute('SELECT email FROM users')
+    user = cur.fetchone()
+    con.commit()
 
-    user = User.query.filter_by(email=email).first()
+    # user = User.query.filter_by(email=email).first()
 
     if user:
+        flash("This email already exist")
         return redirect(url_for('aut.login'))
-    # new_user = [
-    #     ("email",email),
-    #     ("name",name),
-    #     ("password",password)
-    # ]
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
 
-    db.session.add(new_user)
-    db.session.commit()
+    new_user = [
+        ("email", email),
+        ("name", name),
+        ("password", password)
+    ]
+
+    con.close()
+    # new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    #
+    # db.session.add(new_user)
+    # db.session.commit()
 
     return redirect(url_for('auth.login'))
 
