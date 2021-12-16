@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Blueprint, render_template, redirect, url_for, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
@@ -22,11 +24,19 @@ def signup_post():
     name = request.form.get(('name'))
     password = request.form.get('password')
 
+    # con = sqlite3.connect('../database.db')
+    # cur = con.cursor()
+    # user = cur.execute('SELECT email FROM users')
+
     user = User.query.filter_by(email=email).first()
 
     if user:
         return redirect(url_for('aut.login'))
-
+    # new_user = [
+    #     ("email",email),
+    #     ("name",name),
+    #     ("password",password)
+    # ]
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
 
     db.session.add(new_user)
