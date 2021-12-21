@@ -1,8 +1,8 @@
 import sqlite3
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from . import get_db_connection
 
 auth = Blueprint('auth', __name__)
 
@@ -14,18 +14,21 @@ def login():
 
 @auth.route('/login', methods=['POST'])
 def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    con = sqlite3.connect('project/database.db')
+    email = request.form['email']
+    password = request.form.get('password').encode('utf-8')
+    con = get_db_connection()
     cur = con.cursor()
     cur.execute('SELECT password FROM users WHERE email=?', [email])
-    query = cur.fetchone()
     con.commit()
+    query = cur.fetchone()
+    con.close()
 
-    if check_password_hash(password, query):
+    if bcrypt.checkpw(password, query[0]):
+        session['email'] = email
         return redirect(url_for('main.profile'))
-    else:
-        flash()
+    flash("Wrong password")
+
+    return render_template('login.html')
 
 
 @auth.route('/signup')
@@ -33,7 +36,7 @@ def signup():
     return render_template('signup.html')
 
 
-@auth.route('/signup', methods=['POST'])
+@auth.route('/signup', methods=('GET', 'POST'))
 def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
@@ -42,11 +45,11 @@ def signup_post():
     salt = bcrypt.gensalt(rounds=10)
     hashed = bcrypt.hashpw(password, salt)
 
-    con = sqlite3.connect('project/database.db')
+    con = get_db_connection()
     cur = con.cursor()
     cur.execute('SELECT email FROM users')
-    user = cur.fetchone()
     con.commit()
+    user = cur.fetchone()
 
     if user:
         flash("This email already exist")
@@ -68,3 +71,11 @@ def signup_post():
 @auth.route('/logout')
 def logout():
     return 'Logout'
+
+
+@auth.route('/logout', methods=['POST'])
+def logout_post():
+    session.pop('email', None)
+    session.pop('name', None)
+    return redirect(url_for('login'))
+

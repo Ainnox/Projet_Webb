@@ -1,21 +1,18 @@
 import sqlite3
-from flask import Flask, url_for, request, flash, redirect, render_template
+from flask import Flask, url_for, request, flash, redirect, render_template, session
 from werkzeug.exceptions import abort
-from flask_sqlalchemy import SQLAlchemy
 
-# https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login-fr
 
-# init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
+def get_db_connection():
+    conn = sqlite3.connect('project/database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = 'maSuperClé'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-
-    db.init_app(app)
 
     # blueprint for auth routes in our app
     from .auth import auth as auth_blueprint
@@ -27,13 +24,6 @@ def create_app():
 
     return app
 
-
-# def get_db_connection():
-#     conn = sqlite3.connect('database.db')
-#     conn.row_factory = sqlite3.Row
-#     return conn
-#
-#
 # def get_post(post_id):
 #     conn = get_db_connection()
 #     post = conn.execute('SELECT * FROM posts WHERE id = ?', (post_id,)).fetchone()
