@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
 from . import db
 
 auth = Blueprint('auth', __name__)
@@ -10,6 +10,22 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login')
 def login():
     return render_template('login.html')
+
+
+@auth.route('/login', methods=['POST'])
+def login_post():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    con = sqlite3.connect('project/database.db')
+    cur = con.cursor()
+    cur.execute('SELECT password FROM users WHERE email=?', [email])
+    query = cur.fetchone()
+    con.commit()
+
+    if check_password_hash(password, query):
+        return redirect(url_for('main.profile'))
+    else:
+        flash()
 
 
 @auth.route('/signup')
@@ -21,31 +37,30 @@ def signup():
 def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
-    password = request.form.get('password')
+    password = request.form.get('password').encode('utf-8')
 
-    con = sqlite3.connect('database.db')
+    salt = bcrypt.gensalt(rounds=10)
+    hashed = bcrypt.hashpw(password, salt)
+
+    con = sqlite3.connect('project/database.db')
     cur = con.cursor()
     cur.execute('SELECT email FROM users')
     user = cur.fetchone()
     con.commit()
 
-    # user = User.query.filter_by(email=email).first()
-
     if user:
         flash("This email already exist")
-        return redirect(url_for('aut.login'))
+        return redirect(url_for('auth.login'))
 
     new_user = [
-        ("email", email),
-        ("name", name),
-        ("password", password)
+        email,
+        name,
+        hashed
     ]
 
+    cur.execute('INSERT INTO users (email,name,password) VALUES (? ,? ,?)', new_user)
+    con.commit()
     con.close()
-    # new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-    #
-    # db.session.add(new_user)
-    # db.session.commit()
 
     return redirect(url_for('auth.login'))
 
