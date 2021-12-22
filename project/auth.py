@@ -25,7 +25,7 @@ def login_post():
 
     if bcrypt.checkpw(password, query[0]):
         session['email'] = email
-        return redirect(url_for('main.profile'))
+        return redirect(url_for('main.index'))
     flash("Wrong password")
 
     return render_template('login.html')

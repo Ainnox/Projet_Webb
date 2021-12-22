@@ -1,0 +1,32 @@
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
+
+--CREATE TABLE posts (
+--    id INTEGER PRIMARY KEY AUTOINCREMENT,
+--    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--    title TEXT NOT NULL,
+--    content TEXT NOT NULL
+--);
+--
+--CREATE TABLE users (
+--    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+--    email TEXT NOT NULL ,
+--    password TEXT NOT NULL ,
+--    name TEXT NOT NULL?
+--    admin INTEGER
+--);
+
+CREATE TABLE users(
+   email VARCHAR(50),
+   name VARCHAR(50) NOT NULL,
+   password TEXT NOT NULL,
+   admin INT DEFAULT 0,
+   PRIMARY KEY(email)
+);
+
+CREATE TABLE posts(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   title TEXT NOT NULL,
+   content TEXT NOT NULL,
+   created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
