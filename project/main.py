@@ -2,25 +2,7 @@ from flask import Blueprint, render_template, url_for, request, flash, redirect,
 from . import get_db_connection
 from werkzeug.exceptions import abort
 
-
 main = Blueprint('main', __name__)
-
-
-# @main.route('/')
-# def index():
-#     return render_template('login_ind.html')
-
-
-# @main.route('/profile')
-# def profile():
-#     con = get_db_connection()
-#     cur = con.cursor()
-#     cur.execute('SELECT name FROM users WHERE email=?', [session['email']])
-#     con.commit()
-#     query = cur.fetchone()
-#     con.close()
-#     session['name'] = query[0]
-#     return render_template('profile.html')
 
 
 def get_post(post_id):
@@ -32,7 +14,7 @@ def get_post(post_id):
     return post
 
 
-@main.route('/index')
+@main.route('/')
 def index():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts ORDER BY created DESC').fetchall()
