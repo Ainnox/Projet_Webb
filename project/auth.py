@@ -52,7 +52,7 @@ def signup_post():
     user = cur.fetchone()
 
     if user:
-        flash("This email already exist")
+        flash("This email already exist", 'error')
         return redirect(url_for('auth.login'))
 
     new_user = [
