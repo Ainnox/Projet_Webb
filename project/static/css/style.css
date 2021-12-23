@@ -1,5 +1,8 @@
 .post_title{
     font-size: 120%;
     color: #097EE5;
-
+}
+.background {
+    background-image: url("deep_space.jpg");
+    background-attachment: fixed;
 }

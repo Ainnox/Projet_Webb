@@ -70,12 +70,7 @@ def signup_post():
 
 @auth.route('/logout')
 def logout():
-    return 'Logout'
-
-
-@auth.route('/logout', methods=['POST'])
-def logout_post():
     session.pop('email', None)
     session.pop('name', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('main.index'))
 
