@@ -1,8 +1,34 @@
-.post_title{
-    font-size: 120%;
+.post_title {
+    font-size: 150%;
     color: #097EE5;
 }
+
+.creation_date {
+    font-size: 75%;
+    color: lightgray
+}
+
+.post_content {
+    color: lightgray;
+}
+
 .background {
     background-image: url("deep_space.jpg");
     background-attachment: fixed;
+    min-height: 100%;
+    padding-bottom: 10px;
+    /*margin-bottom: 100px;*/
+}
+
+.post_content {
+    color: lightgray;
+}
+
+.my_button {
+    border-color: #097EE5;
+    color: #097EE5
+}
+
+html, body {
+    height: 100%;
 }

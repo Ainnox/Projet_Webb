@@ -1,9 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
-    <span class="badge badge-primary">{{ post['created'] }}</span>
- <a href="{{ url_for('main.edit', id=post['id']) }}">
-            <span class="badge badge-warning">Edit</span>
-        </a>
-    <p>{{ post['content'] }}</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-11">
+            <div>
+                <h2 class="post_title pt-3">{% block title %} {{ post['title'] }} {% endblock %}</h2>
+                <span class="creation_date">{{ post['created'] }}</span>
+            </div>
+        </div>
+        <div class="col-1">
+            {% if session['email'] %}
+                {% if session['admin'] == 1 %}
+                <form class="d-flex mt-3" action="{{ url_for('main.edit', id=post['id']) }}">
+                    <button class="btn my_button" type="submit">
+                        Edit
+                    </button>
+                </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+
+</div>
+<hr style="color: lightgray">
+<p class="post_content pb-3">{{ post['content'] }}</p>
 {% endblock %}

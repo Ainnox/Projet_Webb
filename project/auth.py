@@ -18,13 +18,15 @@ def login_post():
     password = request.form.get('password').encode('utf-8')
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute('SELECT password FROM users WHERE email=?', [email])
+    cur.execute('SELECT password,name,admin FROM users WHERE email=?', [email])
     con.commit()
     query = cur.fetchone()
     con.close()
 
     if bcrypt.checkpw(password, query[0]):
         session['email'] = email
+        session['name'] = query[1]
+        session['admin'] = query[2]
         return redirect(url_for('main.index'))
     flash("Wrong password")
 
@@ -47,7 +49,7 @@ def signup_post():
 
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute('SELECT email FROM users')
+    cur.execute('SELECT email FROM users WHERE email=?', [email])
     con.commit()
     user = cur.fetchone()
 
@@ -72,5 +74,5 @@ def signup_post():
 def logout():
     session.pop('email', None)
     session.pop('name', None)
+    session.pop('admin', None)
     return redirect(url_for('main.index'))
-

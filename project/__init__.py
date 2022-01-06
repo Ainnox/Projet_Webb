@@ -1,11 +1,20 @@
 import sqlite3
-from flask import Flask
+from flask import Flask, session
+from werkzeug.exceptions import abort
 
 
 def get_db_connection():
     conn = sqlite3.connect('project/database.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def get_perm():
+    if not session.get('email'):
+        abort(401)
+
+    if session['admin'] != 1:
+        abort(401)
 
 
 def create_app():
@@ -22,4 +31,3 @@ def create_app():
     app.register_blueprint(main_blueprint)
 
     return app
-

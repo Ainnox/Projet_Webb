@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, request, flash, redirect, session
-from . import get_db_connection
+from . import get_db_connection,get_perm
 from werkzeug.exceptions import abort
 
 main = Blueprint('main', __name__)
@@ -17,9 +17,15 @@ def get_post(post_id):
 @main.route('/')
 def index():
     conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts ORDER BY created DESC').fetchall()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM posts ORDER BY created DESC')
+    conn.commit()
+    posts = cur.fetchall()
+    lastId = len(posts)
+
     conn.close()
-    return render_template('index.html', posts=posts)
+
+    return render_template('index.html', posts=posts, lastId=lastId)
 
 
 @main.route('/<int:post_id>')
@@ -30,6 +36,8 @@ def post(post_id):
 
 @main.route('/create', methods=('GET', 'POST'))
 def create():
+    get_perm()
+
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -48,8 +56,9 @@ def create():
 
 @main.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
-    post = get_post(id)
+    get_perm()
 
+    post = get_post(id)
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
