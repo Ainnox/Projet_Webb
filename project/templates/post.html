@@ -4,19 +4,25 @@
     <div class="row">
         <div class="col-11">
             <div>
-                <h2 class="post_title pt-3">{% block title %} {{ post['title'] }} {% endblock %}</h2>
+                <h2 class="title_post pt-3">{% block title %} {{ post['title_post'] }} {% endblock %}</h2>
                 <span class="creation_date">{{ post['created'] }}</span>
+
             </div>
+            {% if liked == 0 %}
+            <a href="{{ url_for('main.liked',id_post=post['id_post']) }}" class="bi-heart"
+               style="width: 1em; height: 1em; color: lightcoral"></a>
+            {% else %}
+            <a href="{{ url_for('main.unliked',id_post=post['id_post']) }}" class="bi-heart-fill"
+               style="width: 1em; height: 1em; color: lightcoral"></a>
+            {% endif %}
         </div>
         <div class="col-1">
-            {% if session['email'] %}
-                {% if session['admin'] == 1 %}
-                <form class="d-flex mt-3" action="{{ url_for('main.edit', id=post['id']) }}">
-                    <button class="btn my_button" type="submit">
-                        Edit
-                    </button>
-                </form>
-                {% endif %}
+            {% if get_perm("edit") %}
+            <form class="d-flex mt-3" action="{{ url_for('main.edit', id_post=post['id_post']) }}">
+                <button class="btn my_button" type="submit">
+                    Edit
+                </button>
+            </form>
             {% endif %}
         </div>
     </div>

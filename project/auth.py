@@ -1,7 +1,5 @@
-import sqlite3
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 import bcrypt
-from werkzeug.security import generate_password_hash, check_password_hash
 from . import get_db_connection
 
 auth = Blueprint('auth', __name__)
@@ -18,7 +16,7 @@ def login_post():
     password = request.form.get('password').encode('utf-8')
     con = get_db_connection()
     cur = con.cursor()
-    cur.execute('SELECT password,name,admin FROM users WHERE email=?', [email])
+    cur.execute('SELECT password,name FROM users WHERE email=?', [email])
     con.commit()
     query = cur.fetchone()
     con.close()
@@ -26,7 +24,6 @@ def login_post():
     if bcrypt.checkpw(password, query[0]):
         session['email'] = email
         session['name'] = query[1]
-        session['admin'] = query[2]
         return redirect(url_for('main.index'))
     flash("Wrong password")
 
@@ -44,26 +41,37 @@ def signup_post():
     name = request.form.get('name')
     password = request.form.get('password').encode('utf-8')
 
+    if not email:
+        flash("Please enter your email", 'error')
+        return redirect(url_for('auth.signup'))
+    elif not name:
+        flash("Please enter a name", 'error')
+        return redirect(url_for('auth.signup'))
+    elif not password:
+        flash("Please enter a password", 'error')
+        return redirect(url_for('auth.signup'))
+
     salt = bcrypt.gensalt(rounds=10)
     hashed = bcrypt.hashpw(password, salt)
 
     con = get_db_connection()
     cur = con.cursor()
     cur.execute('SELECT email FROM users WHERE email=?', [email])
-    con.commit()
     user = cur.fetchone()
 
     if user:
         flash("This email already exist", 'error')
         return redirect(url_for('auth.login'))
 
+    cur.execute("SELECT id_role FROM Role WHERE role_name='guest'")
     new_user = [
         email,
         name,
-        hashed
+        hashed,
+        cur.fetchone()[0]
     ]
 
-    cur.execute('INSERT INTO users (email,name,password) VALUES (? ,? ,?)', new_user)
+    cur.execute('INSERT INTO users (email,name,password,id_role) VALUES (? ,? ,?,?)', new_user)
     con.commit()
     con.close()
 
@@ -74,5 +82,4 @@ def signup_post():
 def logout():
     session.pop('email', None)
     session.pop('name', None)
-    session.pop('admin', None)
     return redirect(url_for('main.index'))
