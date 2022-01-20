@@ -142,3 +142,14 @@ def users():
     roles = co.execute("SELECT role_name FROM Role").fetchall()
     co.close()
     return render_template('users.html', users=users, roles=roles)
+
+
+@main.route('/liked')
+def posts_liked():
+    co = get_db_connection()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM liked NATURAL JOIN Posts WHERE email=?", (session.get('email'),))
+    posts = cur.fetchall()
+    co.close()
+
+    return render_template('liked.html',posts=posts)
