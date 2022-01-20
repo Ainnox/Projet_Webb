@@ -35,6 +35,17 @@ def get_role(need_role):
         return False
 
 
+def event_follow(id_event):
+    co = get_db_connection()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM Selected WHERE email=? AND id_event=?", (session.get('email'), id_event))
+    followed = cur.fetchone()
+    co.close()
+    if followed:
+        return True
+    return False
+
+
 def create_app():
     app = Flask(__name__)
 
@@ -50,5 +61,6 @@ def create_app():
 
     app.jinja_env.globals.update(get_role=get_role)
     app.jinja_env.globals.update(get_perm=get_perm)
+    app.jinja_env.globals.update(event_follow=event_follow)
 
     return app

@@ -20,10 +20,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
         <a class="navbar-brand ms-2" style="font-size: 150%" href="{{ url_for('main.index') }}">SpaceNews</a>
         <div class="container-fluid d-flex justify-content-between">
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="navbar-item" href="{{ url_for('main.index') }}">Posts</a>
-                    <a class="navbar-item" href="{{ url_for('main.index') }}">Events</a>
+            <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
+                <div class="navbar-nav ">
+                    <a class="navbar-item bg-dark" style="color: lightgray" href="{{ url_for('main.index') }}">Posts</a>
+                    <a class="navbar-item bg-dark" style="color: lightgray" href="{{ url_for('main.events') }}">Events</a>
                 </div>
             </div>
             <form class="d-flex navbar-nav" action="{{ url_for('main.index') }}" method="post">

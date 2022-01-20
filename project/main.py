@@ -153,3 +153,34 @@ def posts_liked():
     co.close()
 
     return render_template('liked.html', posts=posts)
+
+
+@main.route('/events')
+def events():
+    co = get_db_connection()
+    cur = co.cursor()
+    cur.execute("SELECT * FROM Events ORDER BY event_date")
+    events = cur.fetchall()
+    co.close()
+
+    return render_template('events.html', events=events)
+
+
+@main.route('/<int:id_event>/follow', methods=('GET', 'POST'))
+def follow(id_event):
+    co = get_db_connection()
+    co.execute("INSERT INTO Selected VALUES (?,?)", (session.get('email'), id_event))
+    co.commit()
+    co.close()
+
+    return redirect(url_for('main.events'))
+
+
+@main.route('/<int:id_event>/unfollow', methods=('GET', 'POST'))
+def unfollow(id_event):
+    co = get_db_connection()
+    co.execute("DELETE FROM Selected WHERE email=? AND id_event=?", (session.get('email'), id_event))
+    co.commit()
+    co.close()
+
+    return redirect(url_for('main.events'))

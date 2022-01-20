@@ -7,14 +7,6 @@ DROP TABLE IF EXISTS Posses;
 DROP TABLE IF EXISTS Rights;
 DROP TABLE IF EXISTS Role;
 
-/*CREATE TABLE Users(
-   email TEXT,
-   name TEXT NOT NULL,
-   password TEXT NOT NULL,
-   admin INTEGER NOT NULL,
-   PRIMARY KEY(email)
-);
-
 CREATE TABLE Posts(
    id_post INTEGER PRIMARY KEY AUTOINCREMENT,
    title_post TEXT NOT NULL,
@@ -26,37 +18,7 @@ CREATE TABLE Events(
    id_event INTEGER PRIMARY KEY AUTOINCREMENT,
    title_event TEXT NOT NULL,
    content_event TEXT,
-   event_start DATETIME NOT NULL
-);
-
-CREATE TABLE Selected(
-   email TEXT,
-   id_event INTEGER,
-   PRIMARY KEY(email, id_event),
-   FOREIGN KEY(email) REFERENCES Users(email),
-   FOREIGN KEY(id_event) REFERENCES Events(id_event)
-);
-
-CREATE TABLE Liked(
-   email TEXT,
-   id_post INTEGER,
-   PRIMARY KEY(email, id_post),
-   FOREIGN KEY(email) REFERENCES Users(email),
-   FOREIGN KEY(id_post) REFERENCES Posts(id_post)
-);*/
-
-CREATE TABLE Posts(
-   id_post INTEGER PRIMARY KEY AUTOINCREMENT,
-   title_post TEXT NOT NULL,
-   content_post TEXT NOT NULL,
-   created DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Events(
-   id_event INTEGER PRIMARY KEY AUTOINCREMENT,
-   title_event TEXT NOT NULL,
-   content_event TEXT,
-   event_start DATETIME NOT NULL
+   event_date DATETIME NOT NULL
 );
 
 CREATE TABLE Role(

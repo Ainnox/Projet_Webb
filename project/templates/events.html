@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for event in events %}
+<div class="d-flex justify-content-between">
+    <a>
+        <h2 class="title_post">{{ event['title_event'] }}</h2>
+    </a>
+    <span class="text-light mt-2" style="color: lightgray">Event date: {{ event['event_date'] }}</span>
+    {% if event_follow(event['id_event']) %}
+    <a href="{{ url_for('main.unfollow',id_event=event['id_event']) }}"
+       class="bi bi-alarm-fill" style="height: 1em; width: 1em; font-size: 2rem; color: lightgray"></a>
+    {% else %}
+    <a href="{{ url_for('main.follow',id_event=event['id_event']) }}"
+       class="bi bi-alarm" style="height: 1em; width: 1em; font-size: 2rem; color: lightgray"></a>
+    {% endif %}
+</div>
+<p class="text-light ">{{ event['content_event'] }}</p>
+<hr style="color: lightgray">
+{% endfor %}
+{% endblock %}

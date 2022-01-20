@@ -31,6 +31,10 @@ cur.execute("INSERT INTO Posses VALUES (1,1),"
             "(3,2),"
             "(3,1);")
 
+cur.execute(
+    "INSERT INTO Events (title_event,content_event,event_date) "
+    "VALUES ('UFO encounter','On va voir des aliens','2020-02-12')")
+
 salt = bcrypt.gensalt(rounds=10)
 hashed = bcrypt.hashpw("admin".encode('utf-8'), salt)
 admin = [
