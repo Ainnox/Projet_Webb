@@ -1,18 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Create a New Post {% endblock %}</h1>
+<h1 class="h1 text-light">{% block title %} Create a New Post {% endblock %}</h1>
 
 <form method="post">
     <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" name="title"
-               placeholder="Post title" class="form-control"
-               value="{{ request.form['title'] }}">
+        <label style="color: lightgray">Title</label>
+        <input type="text" name="title" placeholder="Post title" class="form-control">
     </div>
 
     <div class="form-group">
-        <label for="content">Content</label>
+        <label style="color: lightgray">Content</label>
         <textarea name="content" placeholder="Post content"
                   class="form-control">{{ request.form['content'] }}</textarea>
     </div>

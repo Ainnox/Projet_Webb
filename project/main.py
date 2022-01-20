@@ -110,7 +110,7 @@ def delete(id_post):
     conn.execute('DELETE FROM Posts WHERE id_post = ?', (id_post,))
     conn.commit()
     conn.close()
-    flash('"{}" was successfully deleted!'.format(post['title']))
+    flash('"{}" was successfully deleted!'.format(post['title_post']))
     return redirect(url_for('main.index'))
 
 
@@ -152,4 +152,4 @@ def posts_liked():
     posts = cur.fetchall()
     co.close()
 
-    return render_template('liked.html',posts=posts)
+    return render_template('liked.html', posts=posts)
